@@ -70,13 +70,12 @@ jobs:
         uses: peter-evans/create-or-update-comment@v1
         with:
           issue-number: ${{ fromJson(steps.pr-format.outputs.result).prNumber }}
-          body:  ${{ steps.comment.outputs.body }}
+          body: ${{ steps.comment.outputs.body }}
 
       - name: Create commit comment
         if: fromJson(steps.pr-format.outputs.result).prNumber == 0
         uses: peter-evans/commit-comment@v1
         with:
           sha: ${{ github.sha }}
-          body: |
-            test what uhh?
+          body: ${{ steps.comment.outputs.body }}
 
