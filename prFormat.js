@@ -9,6 +9,7 @@ const readMaintainers = async (path) => {
 
 
 module.exports = async ({ github, context: { payload }, maintainersFile }) => {
+  console.log('payload', payload);
   // https://developer.github.com/v3/search/#search-issues-and-pull-requests
   const { total_count, items: [pr] } = await github.search.issuesAndPullRequests({
     q: `${payload.event.head_commit.id}+repo:${payload.event.repository.full_name}+type:pr+is:merged`,
