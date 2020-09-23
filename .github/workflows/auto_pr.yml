@@ -73,7 +73,7 @@ jobs:
           body:  ${{ steps.comment.outputs.body }}
 
       - name: Create commit comment
-        if: ! steps.pr-format.outputs.result.prNumber
+        if: steps.pr-format.outputs.result.prNumber == 0
         uses: peter-evans/commit-comment@v1
         with:
           sha: ${{ github.sha }}
