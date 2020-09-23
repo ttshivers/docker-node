@@ -78,5 +78,5 @@ jobs:
         with:
           sha: ${{ github.sha }}
           body: |
-            ${{ steps.comment.outputs.body }}
+            test what uhh?
 
