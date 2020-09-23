@@ -1,7 +1,7 @@
 const fs = require('fs');
 
 const readMaintainers = async (path) => {
-  const rawMaintainers = await fs.promises.readFile(path);
+  const rawMaintainers = await fs.promises.readFile(path, {encoding: 'utf8'});
   console.log('rawMaintainers', rawMaintainers)
   return rawMaintainers.split('\n')
     .map((maintainer) => `@${maintainer}`)
