@@ -49,8 +49,8 @@ jobs:
           path: node-test
           branch: autopr
           branch-suffix: short-commit-hash
-          committer: Node.js GitHub Bot <github-bot@iojs.org>
-          author: Node.js GitHub Bot <github-bot@iojs.org>
+          # committer: Node.js GitHub Bot <github-bot@iojs.org>
+          # author: Node.js GitHub Bot <github-bot@iojs.org>
           commit-message: ${{ fromJson(steps.pr-format.outputs.result).prTitle }}
           title: ${{ fromJson(steps.pr-format.outputs.result).prTitle }}
           body: ${{ fromJson(steps.pr-format.outputs.result).prBody }}
@@ -77,5 +77,6 @@ jobs:
         uses: peter-evans/commit-comment@v1
         with:
           sha: ${{ github.sha }}
-          body: ${{ steps.comment.outputs.body }}
+          body: |
+            ${{ steps.comment.outputs.body }}
 
