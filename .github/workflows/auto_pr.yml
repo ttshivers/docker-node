@@ -3,7 +3,7 @@ name: Create official images PR
 on:
   push:
     branches:
-      - master
+      - test_pr
 
     paths:
       - "generate-stackbrew-*.sh"
@@ -20,11 +20,11 @@ jobs:
         with:
           path: docker-node
 
-      - name: Checkout the official-images repo
+      - name: Checkout the node-test repo
         uses: actions/checkout@v2
         with:
-          path: official-images
-          repository: docker-library/official-images
+          path: node-test
+          repository: ttshivers-test/node-test
 
       - name: Generate PR text
         uses: actions/github-script@v3
@@ -38,15 +38,15 @@ jobs:
       - name: Generate Stackbrew for diff
         run: |
           cd docker-node
-          ./generate-stackbrew-library.sh > ../official-images/library/node
+          ./generate-stackbrew-library.sh > ../node-test/node
 
-      - name: Create PR in official-images
+      - name: Create PR in node-test
         id: cpr
         uses: peter-evans/create-pull-request@v3
         with:
           token: ${{ secrets.MACHINE_USER_PAT }}
-          push-to-fork: machine-user/official-images
-          path: official-images
+          push-to-fork: ttshivers/node-test
+          path: node-test
           branch: autopr
           branch-suffix: short-commit-hash
           committer: Node.js GitHub Bot <github-bot@iojs.org>
@@ -63,7 +63,7 @@ jobs:
       - name: Comment body
         id: comment
         run: |
-          echo ::set-output name=body::"Created PR to the official-images repo (${{ steps.cpr.outputs.pull-request-url }}). See https://github.com/docker-library/faq#an-images-source-changed-in-git-now-what if you are wondering when it will be available on the Docker Hub."
+          echo ::set-output name=body::"Created PR to the node-test repo (${{ steps.cpr.outputs.pull-request-url }}). See https://github.com/docker-library/faq#an-images-source-changed-in-git-now-what if you are wondering when it will be available on the Docker Hub."
 
       - name: Create PR comment
         if: steps.pr-format.outputs.result.prNumber
@@ -77,5 +77,5 @@ jobs:
         uses: peter-evans/commit-comment@v1
         with:
           sha: ${{ github.sha }}
-          body:  ${{ steps.comment.outputs.body }}
+          body:  {{ steps.comment.outputs.body }}
 
