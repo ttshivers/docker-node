@@ -35,6 +35,11 @@ jobs:
             const script = require(`${basePath}/prFormat.js`);
             return script({ github, context, maintainersFile: `${basePath}/ACTIVE_MAINTAINERS` });
 
+      - run: echo ${{ steps.pr-format.outputs.result }}
+      - run: echo ${{ steps.pr-format.outputs.result.prNumber }}
+      - run: echo ${{ steps.pr-format.outputs.result.prTitle }}
+      - run: echo ${{ steps.pr-format.outputs.result.prBody }}
+
       - name: Generate Stackbrew for diff
         run: |
           cd docker-node
