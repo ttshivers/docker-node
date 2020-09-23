@@ -35,12 +35,7 @@ jobs:
             const script = require(`${basePath}/prFormat.js`);
             return script({ github, context, maintainersFile: `${basePath}/ACTIVE_MAINTAINERS` });
 
-      - run: echo ${{ steps.pr-format.outputs.result }}
-      - run: echo ${{ steps.pr-format.outputs.result.prNumber }}
-      - run: echo ${{ steps.pr-format.outputs.result.prTitle }}
-      - run: echo ${{ steps.pr-format.outputs.result.prBody }}
-
-      - name: Generate Stackbrew for diff "${{ steps.pr-format.outputs.result.prNumber }}"
+      - name: Generate Stackbrew for diff
         run: |
           cd docker-node
           ./generate-stackbrew-library.sh > ../node-test/node
@@ -56,9 +51,9 @@ jobs:
           branch-suffix: short-commit-hash
           committer: Node.js GitHub Bot <github-bot@iojs.org>
           author: Node.js GitHub Bot <github-bot@iojs.org>
-          commit-message: ${{ steps.pr-format.outputs.result.prTitle }}
-          title: ${{ steps.pr-format.outputs.result.prTitle }}
-          body: ${{ steps.pr-format.outputs.result.prBody }}
+          commit-message: ${{ fromJson(steps.pr-format.outputs.result).prTitle }}
+          title: ${{ fromJson(steps.pr-format.outputs.result).prTitle }}
+          body: ${{ fromJson(steps.pr-format.outputs.result).prBody }}
 
       - name: Check outputs
         run: |
@@ -71,14 +66,14 @@ jobs:
           echo ::set-output name=body::"Created PR to the node-test repo (${{ steps.cpr.outputs.pull-request-url }}). See https://github.com/docker-library/faq#an-images-source-changed-in-git-now-what if you are wondering when it will be available on the Docker Hub."
 
       - name: Create PR comment
-        if: steps.pr-format.outputs.result.prNumber
+        if: fromJson(steps.pr-format.outputs.result).prNumber
         uses: peter-evans/create-or-update-comment@v1
         with:
-          issue-number: ${{ steps.pr-format.outputs.result.prNumber }}
+          issue-number: ${{ fromJson(steps.pr-format.outputs.result).prNumber }}
           body:  ${{ steps.comment.outputs.body }}
 
       - name: Create commit comment
-        if: steps.pr-format.outputs.result.prNumber == 0
+        if: fromJson(steps.pr-format.outputs.result.prNumber) == 0
         uses: peter-evans/commit-comment@v1
         with:
           sha: ${{ github.sha }}
