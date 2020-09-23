@@ -5,10 +5,10 @@ on:
     branches:
       - test_pr
 
-    paths:
-      - "generate-stackbrew-*.sh"
-      - "**/Dockerfile"
-      - "**/architectures"
+    # paths:
+    #   - "generate-stackbrew-*.sh"
+    #   - "**/Dockerfile"
+    #   - "**/architectures"
 
 jobs:
   auto-pr:
