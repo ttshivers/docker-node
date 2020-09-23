@@ -10,13 +10,9 @@ const readMaintainers = async (path) => {
 
 module.exports = async ({ github, context: { payload }, maintainersFile }) => {
   // https://developer.github.com/v3/search/#search-issues-and-pull-requests
- const stuff = await github.search.issuesAndPullRequests({
+ const { data: { total_count, items: [pr] } } = await github.search.issuesAndPullRequests({
     q: `${payload.head_commit.id}+repo:${payload.repository.full_name}+type:pr+is:merged`,
   });
-
-  console.log('stuff', stuff)
-
-  const { total_count, items: [pr] } = stuff;
 
   // Use pr title if available or fallback to first line of head commit message
   const title = total_count
