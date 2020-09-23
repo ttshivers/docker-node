@@ -63,7 +63,7 @@ jobs:
       - name: Comment body
         id: comment
         run: |
-          echo ::set-output name=body::"Created PR to the node-test repo (${{ steps.cpr.outputs.pull-request-url }}). See https://github.com/docker-library/faq#an-images-source-changed-in-git-now-what if you are wondering when it will be available on the Docker Hub."
+          echo ::set-output name=body::"Created PR on the node-test repo (${{ steps.cpr.outputs.pull-request-url }}). See https://github.com/docker-library/faq#an-images-source-changed-in-git-now-what if you are wondering when it will be available on the Docker Hub."
 
       - name: Create PR comment
         if: fromJson(steps.pr-format.outputs.result).prNumber
