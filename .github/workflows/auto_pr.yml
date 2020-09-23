@@ -40,7 +40,7 @@ jobs:
       - run: echo ${{ steps.pr-format.outputs.result.prTitle }}
       - run: echo ${{ steps.pr-format.outputs.result.prBody }}
 
-      - name: Generate Stackbrew for diff
+      - name: Generate Stackbrew for diff "${{ steps.pr-format.outputs.result.prNumber }}"
         run: |
           cd docker-node
           ./generate-stackbrew-library.sh > ../node-test/node
