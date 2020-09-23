@@ -219,6 +219,7 @@ jobs:
   build:
     name: ${version} on ${variant}
     runs-on: ubuntu-latest
+    timeout-minutes: 600
     strategy:
       fail-fast: false
       matrix: \${{fromJson('{\"arch\":${arch_json}}')}}

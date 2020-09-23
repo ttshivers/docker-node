@@ -18,6 +18,7 @@ jobs:
   build:
     name: 10 on alpine3.9
     runs-on: ubuntu-latest
+    timeout-minutes: 600
     strategy:
       fail-fast: false
       matrix: ${{fromJson('{"arch":["amd64","arm32v6","arm32v7","arm64v8","i386","ppc64le","s390x"]}')}}

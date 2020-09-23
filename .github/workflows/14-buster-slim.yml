@@ -18,6 +18,7 @@ jobs:
   build:
     name: 14 on buster-slim
     runs-on: ubuntu-latest
+    timeout-minutes: 600
     strategy:
       fail-fast: false
       matrix: ${{fromJson('{"arch":["amd64","arm32v7","arm64v8","ppc64le","s390x"]}')}}
