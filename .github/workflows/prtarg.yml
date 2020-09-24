@@ -1,0 +1,16 @@
+name: TARGET ONE
+
+on:
+  pull_request_target:
+    types:
+      - closed
+
+jobs:
+  pr:
+    runs-on: ubuntu-latest
+    if: github.repository_owner == 'ttshivers' && github.event.pull_request.merged_by != ''
+
+    steps:
+      - name: Dump context
+        if: always()
+        uses: crazy-max/ghaction-dump-context@v1
