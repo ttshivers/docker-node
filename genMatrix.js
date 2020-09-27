@@ -7,6 +7,16 @@ const testFiles = [
   'test-image.bats',
 ];
 
+const archMap = {
+  i386: "386",
+  amd64: "amd64",
+  arm32v6: "arm/v6",
+  arm32v7: "arm/v7",
+  arm64v8: "arm64/v8",
+  ppc64le: "ppc64le",
+  s390x: "s390x",
+};
+
 const nodeDirRegex = /^\d+$/;
 
 const areTestFilesChanged = (changedFiles) => changedFiles
@@ -84,15 +94,25 @@ const parseArchFile = (file) => Object.fromEntries(
 // Given a Dockerfile path, this function returns an array of the supported arches
 const getDockerfileArches = (file, variant) => {
   const archVariants = parseArchFile(path.resolve(path.dirname(file), '../architectures'));
-  return Object.keys(archVariants).filter((arch) => archVariants[arch].includes(variant));
+  return Object.keys(archVariants)
+    .filter((arch) => archVariants[arch].includes(variant))
+    .map((arch) => archMap[arch]);
 };
+
+const getFullNodeVersionFromDockerfile = (file) => fs.readFileSync(file, { encoding: 'utf8' })
+  .split("\n")
+  .find((line) => line.startsWith('ENV NODE_VERSION '))
+  .split(' ')[2];
 
 const getDockerfileMatrixEntries = (file) => {
   const [version, variant] = path.dirname(file).split(path.sep).slice(-2);
   const supportedArches = getDockerfileArches(file, variant);
 
+  const fullVersion = getFullNodeVersionFromDockerfile(file);
+
   return supportedArches.map((arch) => ({
     version,
+    fullVersion,
     variant,
     arch,
   }));

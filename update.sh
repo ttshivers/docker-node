@@ -188,64 +188,6 @@ function update_node_version() {
   )
 }
 
-function add_stage() {
-  local baseuri=${1}
-  shift
-  local version=${1}
-  shift
-  local variant=${1}
-  shift
-
-  IFS=' ' read -ra supportedArches <<< "$(get_supported_arches "${version}" "${variant}")"
-  read -r arch_json <<< "$(json_array "${supportedArches[@]}")"
-
-  echo "name: ${version} on ${variant}
-
-on:
-  push:
-    paths:
-      - functions.sh
-      - test-build.sh
-      - test-image.bats
-      - ${version}/${variant}/Dockerfile
-  pull_request:
-    paths:
-      - functions.sh
-      - test-build.sh
-      - test-image.bats
-      - ${version}/${variant}/Dockerfile
-
-jobs:
-  build:
-    name: ${version} on ${variant}
-    runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix: \${{fromJson('{\"arch\":${arch_json}}')}}
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-
-      - name: Install bats
-        run: sudo apt-get install bats
-
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v1
-
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v1
-
-      - name: Write experimental docker flag
-        run: |
-          echo '{\"experimental\": true}' | sudo tee /etc/docker/daemon.json
-
-      - name: Restart docker daemon
-        run: sudo systemctl restart docker
-
-      - name: Build and test
-        run: ./test-build.sh ${version} ${variant} \${{ matrix.arch }}" > ".github/workflows/${version}-${variant}.yml"
-}
-
 for version in "${versions[@]}"; do
   parentpath=$(dirname "${version}")
   versionnum=$(basename "${version}")
@@ -259,7 +201,7 @@ for version in "${versions[@]}"; do
   IFS=' ' read -ra variants <<< "$(get_variants "${parentpath}")"
 
   if [ -f "${version}/Dockerfile" ]; then
-    add_stage "${baseuri}" "${version}" "default"
+    # add_stage "${baseuri}" "${version}" "default"
     [ true = "$CI_ONLY" ] && continue
 
     if [ "${update_version}" -eq 0 ]; then
@@ -270,7 +212,7 @@ for version in "${versions[@]}"; do
   for variant in "${variants[@]}"; do
     # Skip non-docker directories
     [ -f "${version}/${variant}/Dockerfile" ] || continue
-    add_stage "${baseuri}" "${version}" "${variant}"
+    # add_stage "${baseuri}" "${version}" "${variant}"
     [ true = "$CI_ONLY" ] && continue
 
     update_variant=$(in_variants_to_update "${variant}")
