@@ -96,6 +96,6 @@ for version in "${versions_arg[@]}"; do
 
 done
 
-info "All builds successful!!"
+info "All builds successful!"
 
 exit 0

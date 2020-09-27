@@ -55,16 +55,17 @@ jobs:
 
       - name: Write experimental docker flag
         run: |
-          echo '{\"experimental\": true}' | sudo tee /etc/docker/daemon.json
+          echo '{"experimental": true}' | sudo tee /etc/docker/daemon.json
+
+      - name: Restart docker daemon
+        run: |
+          sudo systemctl restart docker || sudo journalctl -exu docker
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v1
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v1
-
-      - name: Restart docker daemon
-        run: sudo systemctl restart docker
 
       - name: Build and test
         run: ./test-build.sh ${{ matrix.version }} ${{ matrix.variant }} ${{ matrix.arch }}
